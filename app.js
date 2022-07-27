@@ -7,7 +7,7 @@ let options = {
             stackSymbol:[],
             stackNumber:[],
             numberSymbol: 0,
-            lastSymbol: -1
+            lastSymbol: -1,
         }
     },
     methods:{
@@ -124,11 +124,13 @@ let options = {
         }
     },
     template: `
-    <div>
+    <div class="mainClass">
         <h1> CALCULATOR </h1>
         <Screen :text=newText> </Screen>
+        <div class="keyboardClass">
         <NumbersCalculator v-on:number="AddNumber($event)"></NumbersCalculator>
         <SymbolsCalculator :symbolsVector=symbols v-on:newSymbol="AddSymbol($event)"></SymbolsCalculator>
+        </div>
     </div>
     `,
 }
@@ -139,7 +141,6 @@ app.component('NumbersCalculator',{
     data: function()
     {
         return{
-            
         }
     },
     emits:['number'],
@@ -151,8 +152,13 @@ app.component('NumbersCalculator',{
     },
     template:
     `
-    <div v-for="row in 3">
-        <button v-on:click="getNumber(row, number)" v-for="number in 3">{{3*(row-1)+number}}</button>
+    <div class="numbersClass">
+        <div class="rowClass" v-for="row in 3">
+            <button class="numbersClass" v-on:click="getNumber(row, number)" v-for="number in 3">{{3*(row-1)+number}}</button>
+        </div>
+        <div>
+            <button class="zeroClass" v-on:click="$emit('number',0)"> 0 </button>
+        </div>
     </div>
     `
 })
@@ -172,8 +178,9 @@ app.component('SymbolsCalculator',{
     },
     template:
     `
-    <button v-for="symbol in symbolsVector" v-on:click="getSymbol(symbol)" >{{symbol}}</button>
-
+    <div class="containerSymobols">
+        <button class="SymbolsClass" v-for="symbol in symbolsVector" v-on:click="getSymbol(symbol)" >{{symbol}}</button>
+    </div>
     `
 })
 app.component('Screen',{
@@ -197,7 +204,7 @@ app.component('Screen',{
     },
     template:
     `
-    <input type="text" v-model="textScreen">
+    <input class="screenClass" type="text" v-model="textScreen" readonly>
     `
 })
 const vm = app.mount('#app');
