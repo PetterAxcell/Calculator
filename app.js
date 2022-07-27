@@ -1,13 +1,14 @@
 let options = {
     data: function(){
         return {
+            currentNumber : 0,
         }
     },
     template: `
     <div>
         <h1> CALCULATOR </h1>
-        <Screen> </Screen>
-        <NumbersCalculator></NumbersCalculator>
+        <Screen :newNumber=currentNumber> </Screen>
+        <NumbersCalculator v-on:number="currentNumber=$event "></NumbersCalculator>
         <SymbolsCalculator></SymbolsCalculator>
     </div>
     `,
@@ -16,17 +17,42 @@ let options = {
 var app = Vue.createApp(options);
 
 app.component('NumbersCalculator',{
+    data: function()
+    {
+        return{
+            
+        }
+    },
+    emits:['number'],
+    methods:{
+        getNumber(x,y){
+            let whichNumber = 3*(x-1)+y;
+            this.$emit('number',whichNumber)
+        }
+    },
     template:
     `
     <div v-for="row in 3">
-        <button v-for="number in 3">{{row*number}}</button>
+        <button v-on:click="getNumber(row, number)" v-for="number in 3">{{3*(row-1)+number}}</button>
     </div>
     `
 })
 app.component('Screen',{
+    data: function()
+    {
+        return{
+            textScreen : "",
+        }
+    },
+    props:['newNumber'],
+    watch:{
+        newNumber:function(){
+            this.textScreen = this.textScreen+this.newNumber
+        }
+    },
     template:
     `
-    <input type="text">
+    <input type="text" v-model="textScreen">
     `
 })
 app.component('SymbolsCalculator',{
@@ -36,6 +62,7 @@ app.component('SymbolsCalculator',{
     <button> - </button>
     <button> x </button>
     <button> / </button>
+    <button> = </button>
 
     `
 })
