@@ -106,6 +106,7 @@ let options = {
                 if(this.stackSymbol[0] == '='){
                     let aux = this.stackNumber[0]
                     this.newText = ""
+                    this.stackNumber.pop()
                     this.AddNumber(aux)
                     this.RemoveAllSymbols()
                 }
