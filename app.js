@@ -39,6 +39,12 @@ let options = {
             if(flag){
                 this.newText = this.newText.substring(0, this.newText.length - 1) + sym
                 this.stackSymbol[this.stackSymbol.length-1] = sym
+                if(sym == '=')
+                {
+                    this.AllOperation()
+                    console.log(this.stackNumber)
+                    console.log(this.stackSymbol)
+                }
             }
             else{
                 this.newText = this.newText + sym
@@ -69,10 +75,8 @@ let options = {
                 }
             }
 
-        }
-    },
-    watch:{
-        numberSymbol(){
+        },
+        AllOperation(){
             if(this.numberSymbol == 2)
             {
                 if(this.stackSymbol[0] == '+'){
@@ -112,6 +116,11 @@ let options = {
                 }
 
             }
+        },
+    },
+    watch:{
+        numberSymbol(){
+            this.AllOperation()
         }
     },
     template: `
