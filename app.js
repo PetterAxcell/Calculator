@@ -1,14 +1,14 @@
 let options = {
     data: function(){
         return {
-            currentNumber : 0,
+            currentNumber : "",
         }
     },
     template: `
     <div>
         <h1> CALCULATOR </h1>
         <Screen :newNumber=currentNumber> </Screen>
-        <NumbersCalculator v-on:number="currentNumber=$event "></NumbersCalculator>
+        <NumbersCalculator v-on:number="currentNumber=currentNumber + $event"></NumbersCalculator>
         <SymbolsCalculator></SymbolsCalculator>
     </div>
     `,
@@ -47,7 +47,7 @@ app.component('Screen',{
     props:['newNumber'],
     watch:{
         newNumber:function(){
-            this.textScreen = this.textScreen+this.newNumber
+            this.textScreen = this.newNumber
         }
     },
     template:
