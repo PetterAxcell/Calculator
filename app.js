@@ -3,10 +3,24 @@ let options = {
         return {
             newText : "",
             symbols : ['+', '-', 'x', '/', '='],
-            currentSymbol : ""
+            currentSymbol : "",
+            stackSymbol:[],
+            stackNumber:[],
+            numberSymbol: 0,
+            lastSymbol: -1
         }
     },
     methods:{
+        Operation(aux, aux2){
+            this.stackNumber.pop()
+            this.stackNumber.pop()
+            this.stackSymbol.pop()
+            this.stackSymbol.pop()
+            this.newText = ""
+            this.numberSymbol = 0
+            this.AddNumber(aux)
+            this.AddSymbol(aux2)
+        },
         CheckSymbol(){
             //This function checks if there are a symbol
             let flag = false;
@@ -18,18 +32,78 @@ let options = {
         AddSymbol(sym){
             //Add a symbol or replace the last symbol
             let flag = this.CheckSymbol()
-            if(flag){this.newText = this.newText.substring(0, this.newText.length - 1) + sym}
-            else{this.newText = this.newText + sym}
+            if(flag){
+                this.newText = this.newText.substring(0, this.newText.length - 1) + sym
+                this.stackSymbol[this.stackSymbol.length-1] = sym
+            }
+            else{
+                this.newText = this.newText + sym
+                this.stackSymbol.push(sym)
+                this.numberSymbol= this.numberSymbol+1;
+            }
         },
         AddNumber(number){
             //Add a number
             this.newText=this.newText + number
+            if(this.stackNumber.length == 0){
+                this.stackNumber.push(parseInt(this.newText, 10))
+            }
+            else{
+                if( 
+                    (this.newText.substring(this.newText.length - 2, this.newText.length - 1) == '+') || 
+                    (this.newText.substring(this.newText.length - 2, this.newText.length - 1) == '-') ||
+                    (this.newText.substring(this.newText.length - 2, this.newText.length - 1) == 'x') || 
+                    (this.newText.substring(this.newText.length - 2, this.newText.length - 1) == '/') || 
+                    (this.newText.substring(this.newText.length - 2, this.newText.length - 1) == '=')
+                )
+                {
+                    this.lastSymbol = this.newText.length - 2
+                    this.stackNumber.push(parseInt(this.newText.substring(this.newText.length - 1, this.newText.length), 10))
+                }
+                else{
+                    this.stackNumber[this.stackNumber.length-1] = parseInt(this.newText.substring(this.lastSymbol+1, this.newText.length), 10)
+                }
+            }
+
+        }
+    },
+    watch:{
+        numberSymbol(){
+            if(this.numberSymbol == 2)
+            {
+                if(this.stackSymbol[0] == '+'){
+                    let aux = this.stackNumber[0] + this.stackNumber[1]
+                    let aux2 = this.stackSymbol[1]
+                    this.Operation(aux, aux2)
+                }
+                else{
+                    if(this.stackSymbol[0] == '-'){
+                        let aux = this.stackNumber[0] - this.stackNumber[1]
+                        let aux2 = this.stackSymbol[1]
+                        this.Operation(aux, aux2)
+                    }
+                    else{
+                        if(this.stackSymbol[0] == 'x'){
+                            let aux = this.stackNumber[0] * this.stackNumber[1]
+                            let aux2 = this.stackSymbol[1]
+                            this.Operation(aux, aux2)
+                        }
+                        else{
+                            if(this.stackSymbol[0] == '/'){
+                                let aux = this.stackNumber[0] / this.stackNumber[1]
+                                let aux2 = this.stackSymbol[1]
+                                this.Operation(aux, aux2)
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
     template: `
     <div>
         <h1> CALCULATOR </h1>
-        <Screen :text=newText :symbolsVector=symbols> </Screen>
+        <Screen :text=newText> </Screen>
         <NumbersCalculator v-on:number="AddNumber($event)"></NumbersCalculator>
         <SymbolsCalculator :symbolsVector=symbols v-on:newSymbol="AddSymbol($event)"></SymbolsCalculator>
     </div>
@@ -59,35 +133,11 @@ app.component('NumbersCalculator',{
     </div>
     `
 })
-app.component('Screen',{
-    data: function()
-    {
-        return{
-            textScreen : "",
-        }
-    },
-    props:['text'],
-    watch:{
-        text:function(){
-            this.textScreen = this.text
-            this.calculate()
-        }
-    },
-    methods:{
-        calculate(){
-            
-        }
-    },
-    template:
-    `
-    <input type="text" v-model="textScreen">
-    `
-})
 app.component('SymbolsCalculator',{
     data: function()
     {
         return{
-            
+
         }
     },
     props: ['symbolsVector'],
@@ -101,6 +151,30 @@ app.component('SymbolsCalculator',{
     `
     <button v-for="symbol in symbolsVector" v-on:click="getSymbol(symbol)" >{{symbol}}</button>
 
+    `
+})
+app.component('Screen',{
+    data: function()
+    {
+        return{
+            textScreen : "",
+            numSymbols : 0,
+            operation: []
+        }
+    },
+    props:['text', 'symbolsVector'],
+    methods:{
+        calculate(){
+        }
+    },
+    watch:{
+        text:function(){
+            this.textScreen = this.text
+        }
+    },
+    template:
+    `
+    <input type="text" v-model="textScreen">
     `
 })
 const vm = app.mount('#app');
