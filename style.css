@@ -21,9 +21,17 @@ body{
     display: inline-block;
     width: 100%;
 }
+.numbersClass{
+    padding-left: 10%;
+    padding-right: 10%;
+    padding-top: 3%;
+    padding-bottom: 4%;
+    opacity: 0.8;
+}
 .zeroClass{
     display: inline-block;
-    width: 33%;
+    width: 100%;
+    opacity: 0.8;
 }
 .screenClass{
     width: 27%;
@@ -33,6 +41,11 @@ body{
 }
 .SymbolsClass{
     display: inline-block;
+    padding-left: 5%;
+    padding-right: 5%;
+    padding-top: 3%;
+    padding-bottom: 4%;
+    box-shadow:30% 30%;
 }
 .keyboardClass{
     padding: 2%;
