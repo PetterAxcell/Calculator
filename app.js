@@ -14,12 +14,16 @@ let options = {
         Operation(aux, aux2){
             this.stackNumber.pop()
             this.stackNumber.pop()
-            this.stackSymbol.pop()
-            this.stackSymbol.pop()
+            this.RemoveAllSymbols()
             this.newText = ""
-            this.numberSymbol = 0
             this.AddNumber(aux)
             this.AddSymbol(aux2)
+        },
+        RemoveAllSymbols(){
+            this.stackSymbol.pop()
+            this.stackSymbol.pop()
+            this.numberSymbol = 0
+
         },
         CheckSymbol(){
             //This function checks if there are a symbol
@@ -97,6 +101,15 @@ let options = {
                         }
                     }
                 }
+            }
+            else{
+                if(this.stackSymbol[0] == '='){
+                    let aux = this.stackNumber[0]
+                    this.newText = ""
+                    this.AddNumber(aux)
+                    this.RemoveAllSymbols()
+                }
+
             }
         }
     },
