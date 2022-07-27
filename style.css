@@ -34,7 +34,7 @@ body{
     opacity: 0.8;
 }
 .screenClass{
-    width: 27%;
+    width: 52%;
     margin: auto;
     display: flex;
     text-align: right;
@@ -51,6 +51,6 @@ body{
     padding: 2%;
     margin: auto;
     margin-top:3%;
-    width: 25%;
+    width:50%;
     background-color: #CCA7A2;
 }
